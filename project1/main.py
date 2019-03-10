@@ -10,10 +10,19 @@ def main(args_input, args_output, args_names, args_genders, args_dates, args_add
         original_file_path = os.getcwd() + '/' + input_file
         with open(original_file_path, 'r') as originalfile:
             originaltext = originalfile.read()
+            redactedtext = originaltext
             print(originaltext)
             if (args_names):
-                print("REDACT NAME INFO...")
-        outputfile(input_file,args_output)
+                redactedtext = redact_names(redactedtext)
+            if(args_genders):
+                redactedtext = redact_genders(redactedtext)
+            if(args_dates):
+                redactedtext = redact_genders(redactedtext)
+            if(args_addresses):
+                redactedtext = redact_genders(redactedtext)
+            if(args_phones):
+                redactedtext = redact_genders(redactedtext)
+        outputfile(input_file,args_output, redactedtext)
 
 def inputfiles(args_input):
     input_files = []
@@ -23,7 +32,32 @@ def inputfiles(args_input):
             input_files.append(file)
     return input_files
 
-def outputfile(original_file, args_output):
+def redact_names(input_string):
+    print("REDACTING NAMES...")
+    output_string = input_string
+    return output_string
+
+def redact_genders(input_string):
+    print("REDACTING GENDERS...")
+    output_string = input_string
+    return output_string
+
+def redact_dates(input_string):
+    print("REDACTING DATES...")
+    output_string = input_string
+    return output_string
+
+def redact_addresses(input_string):
+    print("REDACTING ADDRESSES...")
+    output_string = input_string
+    return output_string
+
+def redact_phones(input_string):
+    print("REDACTING PHONES...")
+    output_string = input_string
+    return output_string
+
+def outputfile(original_file, args_output, redactedtext):
     cwd = os.getcwd()
     output_directory = cwd + '/' + args_output
     if not os.path.exists(output_directory):
@@ -34,10 +68,8 @@ def outputfile(original_file, args_output):
     original_file_path = cwd + '/' + original_file
     redacted_file_name = os.path.basename(original_file_path) + ".redacted"
     redacted_file_path = output_directory + redacted_file_name
-    if os.path.exists(original_file_path):
-        shutil.copy(original_file_path, redacted_file_path)
-    else:
-        print("file NOT exist: " + cwd + '/' + file)
+    with open(redacted_file_path, 'w') as redacted_file:
+        redacted_file.write(redactedtext)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
