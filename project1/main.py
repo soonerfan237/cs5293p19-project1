@@ -6,9 +6,11 @@ import shutil #for copying files
 
 #inputfiles = []
 
-def main(args_input, args_output):
+def main(args_input, args_output, args_names, args_genders, args_dates, args_addresses, args_phones):
     input_files = inputfiles(args_input)
     outputfiles(input_files,args_output)
+    print("args_names: " + str(args_names))
+    print("args_genders: " + str(args_genders))
 
 def inputfiles(args_input):
     input_files = []
@@ -40,13 +42,14 @@ def outputfiles(input_files, args_output):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", type=str, action="append",required=True,help="File extension to be read.")
-    parser.add_argument("--names", type=str,help="Redact names.")
-    parser.add_argument("--dates", type=str,help="Redact dates.")
-    parser.add_argument("--addressess", type=str,help="Redact addresses.")
-    parser.add_argument("--phones", type=str,help="Redact phone numbers.")
+    parser.add_argument("--names", action='store_true',help="Redact names.")
+    parser.add_argument("--genders", action='store_true',help="Redact genders.")
+    parser.add_argument("--dates", action='store_true',help="Redact dates.")
+    parser.add_argument("--addresses", action='store_true',help="Redact addresses.")
+    parser.add_argument("--phones", action='store_true',help="Redact phone numbers.")
     parser.add_argument("--concept", type=str,help="Redact concept.")
     parser.add_argument("--output", type=str,help="Output location.")
     parser.add_argument("--stats", type=str,help="Redaction stats.")    
     args = parser.parse_args()
     if args.input:
-        main(args.input, args.output)
+        main(args.input, args.output, args.names, args.genders, args.dates, args.addresses, args.phones)
