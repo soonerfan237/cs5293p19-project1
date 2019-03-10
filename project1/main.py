@@ -1,4 +1,5 @@
 import argparse
+import nltk
 
 def main(input):
     print(input)
