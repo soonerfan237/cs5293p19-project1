@@ -7,6 +7,8 @@ verify_ssl = true
 
 [packages]
 nltk = "*"
+glob = "*"
+glob3 = "*"
 
 [requires]
 python_version = "3.7"
