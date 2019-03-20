@@ -8,20 +8,22 @@ def main(args_input, args_output, args_names, args_genders, args_dates, args_add
     input_files = inputfiles(args_input)
     for input_file in input_files:
         original_file_path = os.getcwd() + '/' + input_file
+        print("FILE: " + original_file_path)
         with open(original_file_path, 'r') as originalfile:
             originaltext = originalfile.read()
             redactedtext = originaltext
-            print(originaltext)
-            if (args_names):
-                redactedtext = redact_names(redactedtext)
-            if(args_genders):
-                redactedtext = redact_genders(redactedtext)
-            if(args_dates):
-                redactedtext = redact_genders(redactedtext)
-            if(args_addresses):
-                redactedtext = redact_genders(redactedtext)
-            if(args_phones):
-                redactedtext = redact_genders(redactedtext)
+            if len(redactedtext) > 1:
+                #print(originaltext)
+                if (args_names):
+                    redactedtext = redact_names(redactedtext)
+                if(args_genders):
+                    redactedtext = redact_genders(redactedtext)
+                if(args_dates):
+                    redactedtext = redact_genders(redactedtext)
+                if(args_addresses):
+                    redactedtext = redact_genders(redactedtext)
+                if(args_phones):
+                    redactedtext = redact_genders(redactedtext)
         outputfile(input_file,args_output, redactedtext)
 
 def inputfiles(args_input):
@@ -35,6 +37,11 @@ def inputfiles(args_input):
 def redact_names(input_string):
     print("REDACTING NAMES...")
     output_string = input_string
+    tokens = nltk.word_tokenize(output_string)
+    #tokens
+    tagged = nltk.pos_tag(tokens)
+    for tag in tagged:
+        print(tag)
     return output_string
 
 def redact_genders(input_string):
