@@ -51,6 +51,10 @@ def redact_names(input_string):
 def redact_genders(input_string):
     print("REDACTING GENDERS...")
     output_string = input_string
+    matches = re.findall(r'\bhis\b|\bhim\b|\bher\b|\bhe\b|\bshe\b|\bmale\b|\bfemale\b|\bboy\b|\bgirl\b|man|woman|father|mother|son|daughter|niece|nephew|grandpa|grandma|uncle|aunt',output_string)
+    print(matches)
+    output_string = re.sub(r'male|female|boy|girl|man|woman|father|mother|son|daughter|niece|nephew|grandpa|grandma|uncle|aunt',replace,output_string,flags=re.I)
+    output_string = re.sub(r'\bhis\b|\bhim\b|\bher\b|\bhe\b|\bshe\b|\bmale\b|\bfemale\b|\bboy\b|\bgirl\b|man|woman|father|mother|son|daughter|niece|nephew|grandpa|grandma|uncle|aunt',replace,output_string,flags=re.I)
     return output_string
 
 def redact_dates(input_string):
