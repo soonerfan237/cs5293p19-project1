@@ -1,9 +1,7 @@
-it's nine o'clock on a saturday. regular crowd trickles in.
-sdf asd lkfjasd ifaoif aweij a ln  kl  ja  lk aj fla ksdf jlasa kadk a dals daklsj dfask
+it's nine o'clock on a saturday. regular crowd trickles in. the date is 03-03-1980. the date is 04/05/1990. the date is 1/1/2001. the date is 01/4/01. the date is 02-02-02.'
 
-a 
-asdf
-a s d
-ad a
-ddff asdfkasdfksdfjlskdjfa s  
- ds
+my phone number 867-5309.
+
+can you detect area codes like (405)325-0000.
+
+what about with spaces? (405) 325-0101.

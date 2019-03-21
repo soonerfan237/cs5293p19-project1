@@ -1,8 +1,9 @@
 import argparse #for parsing command line arguments
-import nltk
+import nltk #for text processing
 import os #for checking if file or directory exists
 import glob #for finding files in directory
 import shutil #for copying files
+import re #for regular expressions
 
 def main(args_input, args_output, args_names, args_genders, args_dates, args_addresses, args_phones):
     input_files = inputfiles(args_input)
@@ -19,11 +20,11 @@ def main(args_input, args_output, args_names, args_genders, args_dates, args_add
                 if(args_genders):
                     redactedtext = redact_genders(redactedtext)
                 if(args_dates):
-                    redactedtext = redact_genders(redactedtext)
+                    redactedtext = redact_dates(redactedtext)
                 if(args_addresses):
-                    redactedtext = redact_genders(redactedtext)
+                    redactedtext = redact_addresses(redactedtext)
                 if(args_phones):
-                    redactedtext = redact_genders(redactedtext)
+                    redactedtext = redact_phones(redactedtext)
         outputfile(input_file,args_output, redactedtext)
 
 def inputfiles(args_input):
@@ -33,6 +34,9 @@ def inputfiles(args_input):
             #print(file)
             input_files.append(file)
     return input_files
+
+def replace(match):
+    return 'X' * len(match.group())
 
 def redact_names(input_string):
     print("REDACTING NAMES...")
@@ -52,6 +56,7 @@ def redact_genders(input_string):
 def redact_dates(input_string):
     print("REDACTING DATES...")
     output_string = input_string
+    output_string = re.sub(r'\d\d?[/\-]\d\d?[/\-]\d\d\d?\d?',replace,output_string)
     return output_string
 
 def redact_addresses(input_string):
@@ -62,16 +67,19 @@ def redact_addresses(input_string):
 def redact_phones(input_string):
     print("REDACTING PHONES...")
     output_string = input_string
+    output_string = re.sub(r'\(?\d?\d?\d?\)? ?\d\d\d-\d\d\d\d',replace,output_string)
     return output_string
 
 def outputfile(original_file, args_output, redactedtext):
+    print("REDACTED:")
+    print(redactedtext)
     cwd = os.getcwd()
     output_directory = cwd + '/' + args_output
     if not os.path.exists(output_directory):
-        print("directory NOT exist")
+        #print("directory NOT exist")
         os.mkdir(output_directory)
-    else:
-        print("directory exists")
+    #else:
+        #print("directory exists")
     original_file_path = cwd + '/' + original_file
     redacted_file_name = os.path.basename(original_file_path) + ".redacted"
     redacted_file_path = output_directory + redacted_file_name
