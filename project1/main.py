@@ -51,10 +51,10 @@ def redact_names(input_string):
 def redact_genders(input_string):
     print("REDACTING GENDERS...")
     output_string = input_string
-    matches = re.findall(r'\bhis\b|\bhim\b|\bher\b|\bhe\b|\bshe\b|\bmale\b|\bfemale\b|\bboy\b|\bgirl\b|man|woman|father|mother|son|daughter|niece|nephew|grandpa|grandma|uncle|aunt',output_string)
-    print(matches)
-    output_string = re.sub(r'male|female|boy|girl|man|woman|father|mother|son|daughter|niece|nephew|grandpa|grandma|uncle|aunt',replace,output_string,flags=re.I)
-    output_string = re.sub(r'\bhis\b|\bhim\b|\bher\b|\bhe\b|\bshe\b|\bmale\b|\bfemale\b|\bboy\b|\bgirl\b|man|woman|father|mother|son|daughter|niece|nephew|grandpa|grandma|uncle|aunt',replace,output_string,flags=re.I)
+    #matches = re.findall(r'\bhis\b|\bhim\b|\bher\b|\bhe\b|\bshe\b|\bmale\b|\bfemale\b|\bboy\b|\bgirl\b|man|woman|father|mother|son|daughter|niece|nephew|grandpa|grandma|uncle|aunt',output_string)
+    #print(matches)
+    output_string = re.sub(r'male|female|\bboy\b|\bgirl\b|\bman\b|woman|father|mother|\bson\b|daughter|niece|nephew|grandpa|grandma|uncle|aunt',replace,output_string,flags=re.I)
+    output_string = re.sub(r'\bhis\b|\bhim\b|\bher\b|\bhe\b|\bshe\b|\bmr.|\bmrs.|\bms.',replace,output_string,flags=re.I)
     return output_string
 
 def redact_dates(input_string):
@@ -62,7 +62,7 @@ def redact_dates(input_string):
     output_string = input_string
     output_string = re.sub(r'\d\d?[/\-]\d\d?[/\-]\d\d\d?\d?',replace,output_string)
     output_string = re.sub(r'monday|tuesday|wednesday|thursday|friday|saturday|sunday',replace,output_string, flags=re.I)
-    output_string = re.sub(r'\d?\d? ?(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) ?\d?\d?,? ?\d?\d?\d?\d?',replace,output_string,flags=re.I)
+    output_string = re.sub(r'\d?\d? ?(january|february|march|april|may|june|july|august|september|october|november|december|\bjan\b|\bfeb\b|\bmar\b|\bapr\b|\bmay\b|\bjun\b|\bjul\b|\baug\b|\bsep\b|\boct\b|\bnov\b|\bdec\b) ?\d?\d?,? ?\d?\d?\d?\d?',replace,output_string,flags=re.I)
     output_string = re.sub(r'january|february|march|april|may|june|july|august|september|october|november|december',replace,output_string, flags=re.I)
     return output_string
 
