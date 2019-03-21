@@ -5,3 +5,20 @@ my phone number 867-5309.
 can you detect area codes like (405)325-0000.
 
 what about with spaces? (405) 325-0101.
+
+days of week:
+monday 1
+Tuesday
+ wednesday
+Thursday
+Friday 
+saturday
+sunDay
+
+1 sep 2001
+september 2, 2009
+2 november 2999
+4 oct, 2010
+october 2
+april 5, 2009
+test april test

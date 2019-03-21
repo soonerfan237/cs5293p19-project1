@@ -57,6 +57,9 @@ def redact_dates(input_string):
     print("REDACTING DATES...")
     output_string = input_string
     output_string = re.sub(r'\d\d?[/\-]\d\d?[/\-]\d\d\d?\d?',replace,output_string)
+    output_string = re.sub(r'monday|tuesday|wednesday|thursday|friday|saturday|sunday',replace,output_string, flags=re.I)
+    output_string = re.sub(r'\d?\d? ?(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec) ?\d?\d?,? ?\d?\d?\d?\d?',replace,output_string,flags=re.I)
+    output_string = re.sub(r'january|february|march|april|may|june|july|august|september|october|november|december',replace,output_string, flags=re.I)
     return output_string
 
 def redact_addresses(input_string):
