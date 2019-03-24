@@ -5,6 +5,7 @@ import glob #for finding files in directory
 import shutil #for copying files
 import re #for regular expressions
 import numpy
+import sys #used for stderr output
 
 redacted_names = []
 redacted_genders = []
@@ -48,8 +49,13 @@ def main(args_input, args_output, args_names, args_genders, args_dates, args_add
                     redactedtext = redact_phones(redactedtext,file_count)
                 file_count = file_count + 1
         outputfile(input_file,args_output, redactedtext)
-    if(len(args_stats) > 0):
-        outputstats()
+    #print("args_stats = " + args_stats)
+    if(args_stats == 'stdout'):
+        outputstats_stdout()
+    elif(args_stats == 'stderr'):
+        outputstats_stderr()
+    elif(len(args_stats) > 0):
+        outputstats_file(args_stats)
 
 def inputfiles(args_input):
     input_files = []
@@ -153,7 +159,80 @@ def outputfile(original_file, args_output, redactedtext):
     with open(redacted_file_path, 'w') as redacted_file:
         redacted_file.write(redactedtext)
 
-def outputstats():
+def outputstats_file(file_name):
+    print("SAVING STATS TO FILE: " + file_name)
+    cwd = os.getcwd()
+    outputstats_directory = cwd + '/' + file_name
+    #if not os.path.isfile(outputstats_directory):
+        #print("directory NOT exist")
+        #os.mkdir(outputstats_directory)
+    with open(outputstats_directory, 'w') as outputstats_file:
+        outputstats_file.write("") #clearing file contents
+    with open(outputstats_directory, 'a+') as outputstats_file:
+        outputstats_file.write("==============REDACTION STATISTICS================\n")
+        total_redacted_names = 0
+        total_redacted_genders = 0
+        total_redacted_dates = 0
+        total_redacted_addresses = 0
+        total_redacted_phones = 0
+        total_redacted_concepts = 0
+        for i in range(0,len(redacted_files)):
+            total_redacted_names = total_redacted_names + redacted_names[i]
+            total_redacted_genders = total_redacted_genders + redacted_genders[i]
+            total_redacted_dates = total_redacted_dates + redacted_dates[i]
+            total_redacted_addresses = total_redacted_addresses + redacted_addresses[i]
+            total_redacted_phones = total_redacted_phones + redacted_phones[i]
+            total_redacted_concepts = total_redacted_concepts + redacted_concepts[i]
+            outputstats_file.write("FILE: " + redacted_files[i] + "\n")
+            outputstats_file.write(str(redacted_names[i]) + " names redacted.\n")
+            outputstats_file.write(str(redacted_genders[i]) + " gender words redacted.\n")
+            outputstats_file.write(str(redacted_dates[i]) + " dates redacted.\n")
+            outputstats_file.write(str(redacted_addresses[i]) + " addresses redacted.\n")
+            outputstats_file.write(str(redacted_phones[i]) + " phone numbers redacted.\n")
+            outputstats_file.write(str(redacted_concepts[i]) + " concepts redacted.\n")
+            outputstats_file.write("==============================================\n")
+        outputstats_file.write("TOTALS:\n")
+        outputstats_file.write(str(total_redacted_names) + " names redacted.\n")
+        outputstats_file.write(str(total_redacted_genders) + " gender words redacted.\n")
+        outputstats_file.write(str(total_redacted_dates) + " dates redacted.\n")
+        outputstats_file.write(str(total_redacted_addresses) + " addresses redacted.\n")
+        outputstats_file.write(str(total_redacted_phones) + " phone numbers redacted.\n")
+        outputstats_file.write(str(total_redacted_concepts) + " concepts redacted.\n")
+
+def outputstats_stderr():
+    print(" ",file=sys.stderr)
+    print(" ",file=sys.stderr)
+    print("==============REDACTION STATISTICS================",file=sys.stderr)
+    total_redacted_names = 0
+    total_redacted_genders = 0
+    total_redacted_dates = 0
+    total_redacted_addresses = 0
+    total_redacted_phones = 0
+    total_redacted_concepts = 0
+    for i in range(0,len(redacted_files)):
+        total_redacted_names = total_redacted_names + redacted_names[i]
+        total_redacted_genders = total_redacted_genders + redacted_genders[i]
+        total_redacted_dates = total_redacted_dates + redacted_dates[i]
+        total_redacted_addresses = total_redacted_addresses + redacted_addresses[i]
+        total_redacted_phones = total_redacted_phones + redacted_phones[i]
+        total_redacted_concepts = total_redacted_concepts + redacted_concepts[i]
+        print("FILE: " + redacted_files[i],file=sys.stderr)
+        print (str(redacted_names[i]) + " names redacted.",file=sys.stderr)
+        print (str(redacted_genders[i]) + " gender words redacted.",file=sys.stderr)
+        print (str(redacted_dates[i]) + " dates redacted.",file=sys.stderr)
+        print (str(redacted_addresses[i]) + " addresses redacted.",file=sys.stderr)
+        print (str(redacted_phones[i]) + " phone numbers redacted.",file=sys.stderr)
+        print (str(redacted_concepts[i]) + " concepts redacted.",file=sys.stderr)
+        print("==============================================",file=sys.stderr)
+    print("TOTALS:",file=sys.stderr)
+    print (str(total_redacted_names) + " names redacted.",file=sys.stderr)
+    print (str(total_redacted_genders) + " gender words redacted.",file=sys.stderr)
+    print (str(total_redacted_dates) + " dates redacted.",file=sys.stderr)
+    print (str(total_redacted_addresses) + " addresses redacted.",file=sys.stderr)
+    print (str(total_redacted_phones) + " phone numbers redacted.",file=sys.stderr)
+    print (str(total_redacted_concepts) + " concepts redacted.",file=sys.stderr)
+
+def outputstats_stdout():
     print(" ")
     print(" ")
     print("==============REDACTION STATISTICS================")
