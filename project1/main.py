@@ -4,6 +4,7 @@ import os #for checking if file or directory exists
 import glob #for finding files in directory
 import shutil #for copying files
 import re #for regular expressions
+import numpy
 
 def main(args_input, args_output, args_names, args_genders, args_dates, args_addresses, args_phones):
     input_files = inputfiles(args_input)
@@ -41,18 +42,27 @@ def replace(match):
 def redact_names(input_string):
     print("REDACTING NAMES...")
     output_string = input_string
-    tokens = nltk.word_tokenize(output_string)
-    #tokens
-    tagged = nltk.pos_tag(tokens)
-    for tag in tagged:
-        print(tag)
+    sentences = nltk.sent_tokenize(output_string)
+    for sentence in sentences:
+        #print("SENTENCE: " + sentence)
+        redacted_sentence = sentence
+        words = nltk.word_tokenize(sentence)
+        tags = nltk.pos_tag(words)
+        chunks = nltk.ne_chunk(tags)
+        for chunk in chunks:
+            if isinstance(chunk,nltk.tree.Tree): 
+                if chunk.label() == 'PERSON':
+                    for wordtag in chunk:
+                        #print(wordtag[0])
+                        redacted_sentence = sentence.replace(wordtag[0],'X' * len(wordtag[0]))
+                        sentence = redacted_sentence
+                        output_string = output_string.replace(sentence,redacted_sentence)
+        print("REDACTED: " + redacted_sentence)
     return output_string
 
 def redact_genders(input_string):
     print("REDACTING GENDERS...")
     output_string = input_string
-    #matches = re.findall(r'\bhis\b|\bhim\b|\bher\b|\bhe\b|\bshe\b|\bmale\b|\bfemale\b|\bboy\b|\bgirl\b|man|woman|father|mother|son|daughter|niece|nephew|grandpa|grandma|uncle|aunt',output_string)
-    #print(matches)
     output_string = re.sub(r'male|female|\bboy\b|\bgirl\b|\bman\b|woman|father|mother|\bson\b|daughter|niece|nephew|grandpa|grandma|uncle|aunt',replace,output_string,flags=re.I)
     output_string = re.sub(r'\bhis\b|\bhim\b|\bher\b|\bhe\b|\bshe\b|\bmr.|\bmrs.|\bms.',replace,output_string,flags=re.I)
     return output_string

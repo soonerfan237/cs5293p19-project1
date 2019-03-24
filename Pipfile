@@ -9,6 +9,7 @@ verify_ssl = true
 nltk = "*"
 glob = "*"
 glob3 = "*"
+numpy = "*"
 
 [requires]
 python_version = "3.7"
