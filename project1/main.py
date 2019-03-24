@@ -12,7 +12,7 @@ redacted_dates = []
 redacted_addresses = []
 redacted_phones = []
 redacted_concepts = []
-file_count = 0
+#file_count = 0
 redacted_files = [] #array of all files processed 
 
 def main(args_input, args_output, args_names, args_genders, args_dates, args_addresses, args_phones, args_stats):
@@ -27,6 +27,7 @@ def main(args_input, args_output, args_names, args_genders, args_dates, args_add
             redactedtext = originaltext
             if len(redactedtext) > 1:
                 #print(originaltext)
+                #print(str("file_count = " + str(file_count)))
                 redacted_files.append(original_file_path)
                 redacted_names.append(0)
                 redacted_genders.append(0)
@@ -36,15 +37,15 @@ def main(args_input, args_output, args_names, args_genders, args_dates, args_add
                 redacted_concepts.append(0)
                 print("FILE: " + original_file_path)
                 if (args_names):
-                    redactedtext = redact_names(redactedtext)
+                    redactedtext = redact_names(redactedtext,file_count)
                 if(args_genders):
-                    redactedtext = redact_genders(redactedtext)
+                    redactedtext = redact_genders(redactedtext,file_count)
                 if(args_dates):
-                    redactedtext = redact_dates(redactedtext)
+                    redactedtext = redact_dates(redactedtext,file_count)
                 if(args_addresses):
-                    redactedtext = redact_addresses(redactedtext)
+                    redactedtext = redact_addresses(redactedtext,file_count)
                 if(args_phones):
-                    redactedtext = redact_phones(redactedtext)
+                    redactedtext = redact_phones(redactedtext,file_count)
                 file_count = file_count + 1
         outputfile(input_file,args_output, redactedtext)
     if(len(args_stats) > 0):
@@ -61,8 +62,9 @@ def inputfiles(args_input):
 def replace(match):
     return 'X' * len(match.group())
 
-def redact_names(input_string):
+def redact_names(input_string,file_count):
     print("REDACTING NAMES...")
+    #print("file_count = " + str(file_count))
     redacted_names[file_count] = 0
     output_string = input_string
     sentences = nltk.sent_tokenize(output_string)
@@ -75,16 +77,17 @@ def redact_names(input_string):
         for chunk in chunks:
             if isinstance(chunk,nltk.tree.Tree): 
                 if chunk.label() == 'PERSON':
+                    #print(chunk)
                     redacted_names[file_count] = redacted_names[file_count] + 1
                     for wordtag in chunk:
                         #print(wordtag[0])
-                        redacted_sentence = sentence.replace(wordtag[0],'X' * len(wordtag[0]))
-                        sentence = redacted_sentence
+                        redacted_sentence = redacted_sentence.replace(wordtag[0],'X' * len(wordtag[0]))
+                        #sentence = redacted_sentence
                         output_string = output_string.replace(sentence,redacted_sentence)
         #print("REDACTED: " + redacted_sentence)
     return output_string
 
-def redact_genders(input_string):
+def redact_genders(input_string,file_count):
     print("REDACTING GENDERS...")
     redacted_genders[file_count] = 0
     output_string = input_string
@@ -96,7 +99,7 @@ def redact_genders(input_string):
     output_string = re.sub(r'\bhis\b|\bhim\b|\bher\b|\bhe\b|\bshe\b|\bmr.|\bmrs.|\bms.',replace,output_string,flags=re.I)
     return output_string
 
-def redact_dates(input_string):
+def redact_dates(input_string,file_count):
     print("REDACTING DATES...")
     redacted_dates[file_count] = 0
     output_string = input_string
@@ -118,17 +121,18 @@ def redact_dates(input_string):
     
     return output_string
 
-def redact_addresses(input_string):
+def redact_addresses(input_string,file_count):
     print("REDACTING ADDRESSES...")
     redacted_addresses[file_count] = 0
     output_string = input_string
     return output_string
 
-def redact_phones(input_string):
+def redact_phones(input_string,file_count):
     print("REDACTING PHONES...")
     redacted_phones[file_count] = 0
     output_string = input_string
     matches = re.findall(r'\(?\d?\d?\d?\)? ?\d\d\d-\d\d\d\d',output_string)
+    #print(matches)
     redacted_phones[file_count] = redacted_phones[file_count] + len(matches)
     output_string = re.sub(r'\(?\d?\d?\d?\)? ?\d\d\d-\d\d\d\d',replace,output_string)
     return output_string
@@ -150,6 +154,9 @@ def outputfile(original_file, args_output, redactedtext):
         redacted_file.write(redactedtext)
 
 def outputstats():
+    print(" ")
+    print(" ")
+    print("==============REDACTION STATISTICS================")
     total_redacted_names = 0
     total_redacted_genders = 0
     total_redacted_dates = 0
@@ -157,7 +164,6 @@ def outputstats():
     total_redacted_phones = 0
     total_redacted_concepts = 0
     for i in range(0,len(redacted_files)):
-        total_redacted_names = total_redacted_names + redacted_names[i]
         total_redacted_names = total_redacted_names + redacted_names[i]
         total_redacted_genders = total_redacted_genders + redacted_genders[i]
         total_redacted_dates = total_redacted_dates + redacted_dates[i]
