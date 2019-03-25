@@ -4,7 +4,7 @@ import os #for checking if file or directory exists
 import glob #for finding files in directory
 import shutil #for copying files
 import re #for regular expressions
-import numpy
+#import numpy
 import sys #used for stderr output
 
 redacted_names = []
@@ -13,7 +13,6 @@ redacted_dates = []
 redacted_addresses = []
 redacted_phones = []
 redacted_concepts = []
-#file_count = 0
 redacted_files = [] #array of all files processed 
 
 def main(args_input, args_output, args_names, args_genders, args_dates, args_addresses, args_phones, args_stats):
@@ -66,14 +65,13 @@ def inputfiles(args_input):
     return input_files
 
 def replace(match):
-    print("match.group() = " + match.group())
+    #print("match.group() = " + match.group())
     redacted_string = ""
     for i in range(0,len(match.group())):
         if match.group()[i] == " ":
             redacted_string = redacted_string + " "
         else:
             redacted_string = redacted_string + "X"
-    #return 'X' * len(match.group())
     return redacted_string
 
 def redact_names(input_string,file_count):
@@ -139,6 +137,10 @@ def redact_addresses(input_string,file_count):
     print("REDACTING ADDRESSES...")
     redacted_addresses[file_count] = 0
     output_string = input_string
+    matches = re.findall(r'\b\d\d?\d?\d?\d? \w+ (street|st|hill|avenue|ave|way|boulevard|blvd|road|rd|drive|dr|lane|ln|grove|place|pl|square|sq)\b',output_string,flags=re.I)
+    #print(matches)
+    redacted_addresses[file_count] = redacted_addresses[file_count] + len(matches)
+    output_string = re.sub(r'\b\d\d?\d?\d?\d? \w+ (street|st|hill|avenue|ave|way)\b',replace,output_string,flags=re.I)
     return output_string
 
 def redact_phones(input_string,file_count):
