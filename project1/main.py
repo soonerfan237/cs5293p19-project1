@@ -50,11 +50,12 @@ def main(args_input, args_output, args_names, args_genders, args_dates, args_add
         outputfile(input_file,args_output, redactedtext)
     #print("args_stats = " + args_stats)
     if(args_stats == 'stdout'):
-        outputstats_stdout()
+        results = outputstats_stdout()
     elif(args_stats == 'stderr'):
-        outputstats_stderr()
+        results = outputstats_stderr()
     elif(len(args_stats) > 0):
-        outputstats_file(args_stats)
+        results = outputstats_file(args_stats)
+    return results
 
 def inputfiles(args_input):
     input_files = []
@@ -208,6 +209,7 @@ def outputstats_file(file_name):
         outputstats_file.write(str(total_redacted_addresses) + " addresses redacted.\n")
         outputstats_file.write(str(total_redacted_phones) + " phone numbers redacted.\n")
         outputstats_file.write(str(total_redacted_concepts) + " concepts redacted.\n")
+    return [total_redacted_names, total_redacted_genders, total_redacted_dates, total_redacted_addresses, total_redacted_phones, total_redacted_concepts]
 
 def outputstats_stderr():
     print(" ",file=sys.stderr)
@@ -241,6 +243,7 @@ def outputstats_stderr():
     print (str(total_redacted_addresses) + " addresses redacted.",file=sys.stderr)
     print (str(total_redacted_phones) + " phone numbers redacted.",file=sys.stderr)
     print (str(total_redacted_concepts) + " concepts redacted.",file=sys.stderr)
+    return [total_redacted_names, total_redacted_genders, total_redacted_dates, total_redacted_addresses, total_redacted_phones, total_redacted_concepts]
 
 def outputstats_stdout():
     print(" ")
@@ -274,6 +277,7 @@ def outputstats_stdout():
     print (str(total_redacted_addresses) + " addresses redacted.")
     print (str(total_redacted_phones) + " phone numbers redacted.")
     print (str(total_redacted_concepts) + " concepts redacted.")
+    return [total_redacted_names, total_redacted_genders, total_redacted_dates, total_redacted_addresses, total_redacted_phones, total_redacted_concepts]
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
