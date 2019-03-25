@@ -66,7 +66,15 @@ def inputfiles(args_input):
     return input_files
 
 def replace(match):
-    return 'X' * len(match.group())
+    print("match.group() = " + match.group())
+    redacted_string = ""
+    for i in range(0,len(match.group())):
+        if match.group()[i] == " ":
+            redacted_string = redacted_string + " "
+        else:
+            redacted_string = redacted_string + "X"
+    #return 'X' * len(match.group())
+    return redacted_string
 
 def redact_names(input_string,file_count):
     print("REDACTING NAMES...")
