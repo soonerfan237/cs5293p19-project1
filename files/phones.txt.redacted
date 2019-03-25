@@ -4,11 +4,11 @@ he is a boy. she is a girl. do you see him over there? where is her car?
 they are a man. he is a grandpa. nieces and nephews. 2 sons.
 the date is 03-03-1980. the date is 04/05/1990. the date is 1/1/2001. the date is 01/4/01. the date is 02-02-02.'
 
-my phone number 867-5309.
+my phone number XXXXXXXX.
 
-can you detect area codes like (405)325-0000.
+can you detect area codes like (XXXXXXXXXXXX.
 
-what about with spaces? (405) 325-0101.
+what about with spaces? (XXXX XXXXXXXX.
 
 it should not detect numbers like this 9999-9999
 

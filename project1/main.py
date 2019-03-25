@@ -148,10 +148,10 @@ def redact_phones(input_string,file_count):
     print("REDACTING PHONES...")
     redacted_phones[file_count] = 0
     output_string = input_string
-    matches = re.findall(r'\(?\d?\d?\d?\)? ?\d\d\d-\d\d\d\d',output_string)
+    matches = re.findall(r'\b(\(?\d?\d?\d?\))? ?\d\d\d-\d\d\d\d\b',output_string)
     #print(matches)
     redacted_phones[file_count] = redacted_phones[file_count] + len(matches)
-    output_string = re.sub(r'\(?\d?\d?\d?\)? ?\d\d\d-\d\d\d\d',replace,output_string)
+    output_string = re.sub(r'\b(\(?\d?\d?\d?\))? ?\d\d\d-\d\d\d\d\b',replace,output_string)
     return output_string
 
 def outputfile(original_file, args_output, redactedtext):

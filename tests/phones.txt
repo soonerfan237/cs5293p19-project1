@@ -1,0 +1,7 @@
+my phone number 867-5309.
+
+can you detect area codes like (405)325-0000.
+
+what about with spaces? (405) 325-0101.
+
+it should not detect numbers like this 9999-9999
