@@ -1,28 +1,30 @@
-it's nine o'clock on a saturday. regular crowd trickles in. 
+it's nine o'clock on a XXXXXXXX. regular crowd trickles in. 
 XXX is XXX.
 XX is a XXX. XXX is a XXXX. do you see XXX over there? where is XXX car?
 they are a XXX. XX is a XXXXXXX. XXXXXs and XXXXXXs. 2 sons.
-the date is 03-03-1980. the date is 04/05/1990. the date is 1/1/2001. the date is 01/4/01. the date is 02-02-02.'
+the date is XXXXXXXXXX. the date is XXXXXXXXXX. the date is XXXXXXXX. the date is XXXXXXX. the date is XXXXXXXX.'
 
-my phone number 867-5309.
+my phone number XXXXXXXX.
 
-can you detect area codes like (405)325-0000.
+can you detect area codes like (XXXXXXXXXXXX.
 
-what about with spaces? (405) 325-0101.
+what about with spaces? (XXXX XXXXXXXX.
+
+it should not detect numbers like this 9999-9999
 
 days of week:
-monday 1
-Tuesday
- wednesday
-Thursday
-today is Friday. tomorrow is saturday. and sunday comes afterward. 
-saturday
-sunDay
+XXXXXX 1
+XXXXXXX
+ XXXXXXXXX
+XXXXXXXX
+today is XXXXXX. tomorrow is XXXXXXXX. and XXXXXX comes afterward. 
+XXXXXXXX
+XXXXXX
 
-1 sep 2001
-september 2, 2009
-2 november 2999
-4 oct, 2010
-october 2
-april 5, 2009
-test april test
+X XXX XXXX
+XXXXXXXXX XX XXXX
+X XXXXXXXX XXXX
+X XXXX XXXX
+XXXXXXX X
+XXXXX XX XXXX
+test XXXXX test
