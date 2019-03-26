@@ -1,5 +1,6 @@
 import argparse #for parsing command line arguments
 import nltk #for text processing
+from nltk.corpus import wordnet
 import os #for checking if file or directory exists
 import glob #for finding files in directory
 import shutil #for copying files
@@ -14,7 +15,7 @@ redacted_phones = [] #list to store number of redacted phone numbers in each fil
 redacted_concepts = [] #list to store number of redacted concepts in each file
 redacted_files = [] #array of all files processed
 
-def main(args_input, args_output, args_names, args_genders, args_dates, args_addresses, args_phones, args_stats):
+def main(args_input, args_output, args_names, args_genders, args_dates, args_addresses, args_phones, args_stats, args_concepts):
     input_files = inputfiles(args_input) #calling function to retrieve list of file paths at command line argument locations
     file_count = 0 #iterator for each file that is processed. used to store count at right part in lists
     for input_file in input_files: #for each file to process
@@ -43,14 +44,19 @@ def main(args_input, args_output, args_names, args_genders, args_dates, args_add
                     redactedtext = redact_addresses(redactedtext,file_count) #redact addresses
                 if(args_phones): #if phones in command line arguments
                     redactedtext = redact_phones(redactedtext,file_count) #redact phones
+                if (args_concepts is not None):
+                    for concept in args_concepts:
+                        print("CONCEPT = " + concept)
+                        redactedtext = redact_concept(redactedtext,file_count,concept)
                 file_count = file_count + 1 #increment count of processed files
         outputfile(input_file,args_output, redactedtext) #output redacted text to file
     #print("args_stats = " + args_stats)
+    results = []
     if(args_stats == 'stdout'): #if stats to stdout
         results = outputstats_stdout() #print stats to stdout
     elif(args_stats == 'stderr'): #if stats to stderr
         results = outputstats_stderr() #print stats to stderr
-    elif(len(args_stats) > 0): #if stats to file
+    elif(args_stats is not None): #if stats to file
         results = outputstats_file(args_stats) #print stats to file
     return results #return redacted results
 
@@ -150,9 +156,31 @@ def redact_phones(input_string,file_count): #function to redact phones
     output_string = re.sub(r'\b(\(?\d?\d?\d?\))? ?\d\d\d-\d\d\d\d\b',replace,output_string) #redacting phone numbers
     return output_string #returning redacted text
 
+def redact_concept(input_string,file_count,concept): #function to redact concepts
+    print("REDACTING CONCEPT (" + concept + ")...")
+    redacted_concepts[file_count] = 0
+    strings_to_redact = []
+    output_string = input_string
+    synonyms = wordnet.synsets(concept) #generating synset for concept
+    for synonym in synonyms: #for each synonym
+        strings_to_redact.append(synonym.name().split(".")[0]) #adding synonym to a list of words to redact
+        similars = synonym.similar_tos() #finding words similar to each synonym
+        for similar in similars: #for each similar word
+            strings_to_redact.append(similar.name().split(".")[0]) #add it to the list of words to redact
+    for string in strings_to_redact: #for each word to redact
+        sentences = nltk.sent_tokenize(output_string) #tokenizing string into sentences
+        for sentence in sentences: #for each sentence
+            #print("SENTENCE: " + sentence)
+            redacted_sentence = sentence #initializing redacted sentence
+            if string in redacted_sentence: #if string to redact is in the sentence
+                redacted_concepts[file_count] = redacted_concepts[file_count] + 1 #iterate count of redacted concepts
+                redacted_sentence = redacted_sentence.replace(string,'X' * len(string)) #replacing redacted words with X's
+                output_string = output_string.replace(sentence,redacted_sentence) #replacing redacted sentence into full text
+    return output_string
+
 def outputfile(original_file, args_output, redactedtext): #function to output redacted text to file
     #print("REDACTED:")
-    print(redactedtext)
+    #print(redactedtext)
     cwd = os.getcwd() #getting current directory
     output_directory = cwd + '/' + args_output #generating output directory based on command line argument
     if not os.path.exists(output_directory): #if directory does not exist
@@ -280,9 +308,9 @@ if __name__ == '__main__': #parsing command line arguments
     parser.add_argument("--dates", action='store_true',help="Redact dates.")
     parser.add_argument("--addresses", action='store_true',help="Redact addresses.")
     parser.add_argument("--phones", action='store_true',help="Redact phone numbers.")
-    parser.add_argument("--concept", type=str,help="Redact concept.")
+    parser.add_argument("--concept", type=str, action="append",help="Redact concept.")
     parser.add_argument("--output", type=str,required=True,help="Output location.")
     parser.add_argument("--stats", type=str,help="Redaction stats.")    
     args = parser.parse_args()
     if args.input:
-        main(args.input, args.output, args.names, args.genders, args.dates, args.addresses, args.phones, args.stats)
+        main(args.input, args.output, args.names, args.genders, args.dates, args.addresses, args.phones, args.stats, args.concept)
