@@ -50,7 +50,6 @@ def main(args_input, args_output, args_names, args_genders, args_dates, args_add
                 redact_concept_file_counts = []
                 if (args_concepts is not None):
                     for concept in args_concepts:
-                        print("CONCEPT = " + concept)
                         redact_concept_result = redact_concept(redactedtext,file_count,concept)
                         redactedtext = redact_concept_result[0]
                         redact_concept_file_counts.append(redact_concept_result[1])
@@ -209,26 +208,30 @@ def outputstats_file(file_name): #function to output stats to file
         outputstats_file.write("") #clearing file contents
     with open(outputstats_directory, 'a+') as outputstats_file: #appending redacted stats to file
         outputstats_file.write("==============REDACTION STATISTICS================\n")
-        total_redacted_names = 0 #initializing variables to store total redacted terms of each type
+        total_redacted_names = 0
         total_redacted_genders = 0
         total_redacted_dates = 0
         total_redacted_addresses = 0
         total_redacted_phones = 0
-        total_redacted_concepts = 0
-        for i in range(0,len(redacted_files)): #looping through stats of each file and counting total redacted terms of each type
+        total_redacted_concepts = []
+        for j in range(0,len(_args_concepts)):
+            total_redacted_concepts.append(0)
+        for i in range(0,len(redacted_files)):
             total_redacted_names = total_redacted_names + redacted_names[i]
             total_redacted_genders = total_redacted_genders + redacted_genders[i]
             total_redacted_dates = total_redacted_dates + redacted_dates[i]
             total_redacted_addresses = total_redacted_addresses + redacted_addresses[i]
             total_redacted_phones = total_redacted_phones + redacted_phones[i]
-            total_redacted_concepts = total_redacted_concepts + redacted_concepts[i]
+            for j in range(0,len(_args_concepts)):
+                total_redacted_concepts[j] = total_redacted_concepts[j] + redacted_concepts[i][j]
             outputstats_file.write("FILE: " + redacted_files[i] + "\n")#output results
             outputstats_file.write(str(redacted_names[i]) + " names redacted.\n")
             outputstats_file.write(str(redacted_genders[i]) + " gender words redacted.\n")
             outputstats_file.write(str(redacted_dates[i]) + " dates redacted.\n")
             outputstats_file.write(str(redacted_addresses[i]) + " addresses redacted.\n")
             outputstats_file.write(str(redacted_phones[i]) + " phone numbers redacted.\n")
-            outputstats_file.write(str(redacted_concepts[i]) + " concepts redacted.\n")
+            for j in range(0,len(_args_concepts)):
+                outputstats_file.write(str(redacted_concepts[i][j]) + " " + _args_concepts[j] + " concepts redacted.\n")
             outputstats_file.write("==============================================\n")
         outputstats_file.write("TOTALS:\n") #printing total stats to file
         outputstats_file.write(str(total_redacted_names) + " names redacted.\n")
@@ -236,7 +239,8 @@ def outputstats_file(file_name): #function to output stats to file
         outputstats_file.write(str(total_redacted_dates) + " dates redacted.\n")
         outputstats_file.write(str(total_redacted_addresses) + " addresses redacted.\n")
         outputstats_file.write(str(total_redacted_phones) + " phone numbers redacted.\n")
-        outputstats_file.write(str(total_redacted_concepts) + " concepts redacted.\n")
+        for j in range(0,len(_args_concepts)):
+            outputstats_file.write(str(total_redacted_concepts[j]) + " " + _args_concepts[j] + " concepts redacted.\n")
     return [total_redacted_names, total_redacted_genders, total_redacted_dates, total_redacted_addresses, total_redacted_phones, total_redacted_concepts] #returning total stats - this is needed for test functions
 
 def outputstats_stderr(): #function to print redacted stats to stderr.  see function above for explanation of each line. the only difference is the locatin of output
@@ -248,21 +252,25 @@ def outputstats_stderr(): #function to print redacted stats to stderr.  see func
     total_redacted_dates = 0
     total_redacted_addresses = 0
     total_redacted_phones = 0
-    total_redacted_concepts = 0
+    total_redacted_concepts = []
+    for j in range(0,len(_args_concepts)):
+        total_redacted_concepts.append(0)
     for i in range(0,len(redacted_files)):
         total_redacted_names = total_redacted_names + redacted_names[i]
         total_redacted_genders = total_redacted_genders + redacted_genders[i]
         total_redacted_dates = total_redacted_dates + redacted_dates[i]
         total_redacted_addresses = total_redacted_addresses + redacted_addresses[i]
         total_redacted_phones = total_redacted_phones + redacted_phones[i]
-        total_redacted_concepts = total_redacted_concepts + redacted_concepts[i]
+        for j in range(0,len(_args_concepts)):
+            total_redacted_concepts[j] = total_redacted_concepts[j] + redacted_concepts[i][j]
         print("FILE: " + redacted_files[i],file=sys.stderr)
         print (str(redacted_names[i]) + " names redacted.",file=sys.stderr)
         print (str(redacted_genders[i]) + " gender words redacted.",file=sys.stderr)
         print (str(redacted_dates[i]) + " dates redacted.",file=sys.stderr)
         print (str(redacted_addresses[i]) + " addresses redacted.",file=sys.stderr)
         print (str(redacted_phones[i]) + " phone numbers redacted.",file=sys.stderr)
-        print (str(redacted_concepts[i]) + " concepts redacted.",file=sys.stderr)
+        for j in range(0,len(_args_concepts)):
+            print(str(redacted_concepts[i][j]) + " " + _args_concepts[j] + " concepts redacted.",file=sys.stderr)
         print("==============================================",file=sys.stderr)
     print("TOTALS:",file=sys.stderr)
     print (str(total_redacted_names) + " names redacted.",file=sys.stderr)
@@ -270,7 +278,8 @@ def outputstats_stderr(): #function to print redacted stats to stderr.  see func
     print (str(total_redacted_dates) + " dates redacted.",file=sys.stderr)
     print (str(total_redacted_addresses) + " addresses redacted.",file=sys.stderr)
     print (str(total_redacted_phones) + " phone numbers redacted.",file=sys.stderr)
-    print (str(total_redacted_concepts) + " concepts redacted.",file=sys.stderr)
+    for j in range(0,len(_args_concepts)):
+            print(str(total_redacted_concepts[j]) + " " + _args_concepts[j] + " concepts redacted.",file=sys.stderr)
     return [total_redacted_names, total_redacted_genders, total_redacted_dates, total_redacted_addresses, total_redacted_phones, total_redacted_concepts]
 
 def outputstats_stdout(): #function to print results to stdout.  see function above for full explanation of each line.
@@ -299,7 +308,6 @@ def outputstats_stdout(): #function to print results to stdout.  see function ab
         print (str(redacted_dates[i]) + " dates redacted.")
         print (str(redacted_addresses[i]) + " addresses redacted.")
         print (str(redacted_phones[i]) + " phone numbers redacted.")
-        #print (str(redacted_concepts[i]) + " concepts redacted.")
         for j in range(0,len(_args_concepts)):
             print(str(redacted_concepts[i][j]) + " " + _args_concepts[j] + " concepts redacted.")
         print("==============================================")
@@ -309,7 +317,6 @@ def outputstats_stdout(): #function to print results to stdout.  see function ab
     print (str(total_redacted_dates) + " dates redacted.")
     print (str(total_redacted_addresses) + " addresses redacted.")
     print (str(total_redacted_phones) + " phone numbers redacted.")
-    print (str(total_redacted_concepts) + " concepts redacted.")
     for j in range(0,len(_args_concepts)):
             print(str(total_redacted_concepts[j]) + " " + _args_concepts[j] + " concepts redacted.")
     return [total_redacted_names, total_redacted_genders, total_redacted_dates, total_redacted_addresses, total_redacted_phones, total_redacted_concepts]

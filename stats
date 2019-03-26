@@ -1,0 +1,60 @@
+==============REDACTION STATISTICS================
+FILE: /project/cs5293sp19-project1/otherfiles/mueller.txt
+33 names redacted.
+11 gender words redacted.
+3 dates redacted.
+0 addresses redacted.
+0 phone numbers redacted.
+0 test concepts redacted.
+0 kid concepts redacted.
+0 beautiful concepts redacted.
+==============================================
+FILE: /project/cs5293sp19-project1/test_concept.txt
+0 names redacted.
+0 gender words redacted.
+0 dates redacted.
+0 addresses redacted.
+0 phone numbers redacted.
+0 test concepts redacted.
+0 kid concepts redacted.
+4 beautiful concepts redacted.
+==============================================
+FILE: /project/cs5293sp19-project1/test_addresses.txt
+0 names redacted.
+0 gender words redacted.
+0 dates redacted.
+2 addresses redacted.
+0 phone numbers redacted.
+0 test concepts redacted.
+0 kid concepts redacted.
+0 beautiful concepts redacted.
+==============================================
+FILE: /project/cs5293sp19-project1/flood.txt
+26 names redacted.
+49 gender words redacted.
+4 dates redacted.
+0 addresses redacted.
+0 phone numbers redacted.
+1 test concepts redacted.
+3 kid concepts redacted.
+0 beautiful concepts redacted.
+==============================================
+FILE: /project/cs5293sp19-project1/testfile.txt
+0 names redacted.
+13 gender words redacted.
+22 dates redacted.
+0 addresses redacted.
+3 phone numbers redacted.
+1 test concepts redacted.
+0 kid concepts redacted.
+0 beautiful concepts redacted.
+==============================================
+TOTALS:
+59 names redacted.
+73 gender words redacted.
+29 dates redacted.
+2 addresses redacted.
+3 phone numbers redacted.
+2 test concepts redacted.
+3 kid concepts redacted.
+4 beautiful concepts redacted.
