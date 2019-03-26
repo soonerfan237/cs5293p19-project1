@@ -14,8 +14,11 @@ redacted_addresses = [] #list to store number of redacted addresses in each file
 redacted_phones = [] #list to store number of redacted phone numbers in each file
 redacted_concepts = [] #list to store number of redacted concepts in each file
 redacted_files = [] #array of all files processed
+_args_concepts = []
 
 def main(args_input, args_output, args_names, args_genders, args_dates, args_addresses, args_phones, args_stats, args_concepts):
+    for concept in args_concepts:
+        _args_concepts.append(concept)
     input_files = inputfiles(args_input) #calling function to retrieve list of file paths at command line argument locations
     file_count = 0 #iterator for each file that is processed. used to store count at right part in lists
     for input_file in input_files: #for each file to process
@@ -44,10 +47,14 @@ def main(args_input, args_output, args_names, args_genders, args_dates, args_add
                     redactedtext = redact_addresses(redactedtext,file_count) #redact addresses
                 if(args_phones): #if phones in command line arguments
                     redactedtext = redact_phones(redactedtext,file_count) #redact phones
+                redact_concept_file_counts = []
                 if (args_concepts is not None):
                     for concept in args_concepts:
                         print("CONCEPT = " + concept)
-                        redactedtext = redact_concept(redactedtext,file_count,concept)
+                        redact_concept_result = redact_concept(redactedtext,file_count,concept)
+                        redactedtext = redact_concept_result[0]
+                        redact_concept_file_counts.append(redact_concept_result[1])
+                    redacted_concepts[file_count] = redact_concept_file_counts
                 file_count = file_count + 1 #increment count of processed files
         outputfile(input_file,args_output, redactedtext) #output redacted text to file
     #print("args_stats = " + args_stats)
@@ -158,7 +165,7 @@ def redact_phones(input_string,file_count): #function to redact phones
 
 def redact_concept(input_string,file_count,concept): #function to redact concepts
     print("REDACTING CONCEPT (" + concept + ")...")
-    redacted_concepts[file_count] = 0
+    redactedconcept = 0
     strings_to_redact = []
     output_string = input_string
     synonyms = wordnet.synsets(concept) #generating synset for concept
@@ -173,10 +180,10 @@ def redact_concept(input_string,file_count,concept): #function to redact concept
             #print("SENTENCE: " + sentence)
             redacted_sentence = sentence #initializing redacted sentence
             if string in redacted_sentence: #if string to redact is in the sentence
-                redacted_concepts[file_count] = redacted_concepts[file_count] + 1 #iterate count of redacted concepts
+                redactedconcept = redactedconcept + 1 #iterate count of redacted concepts
                 redacted_sentence = redacted_sentence.replace(string,'X' * len(string)) #replacing redacted words with X's
                 output_string = output_string.replace(sentence,redacted_sentence) #replacing redacted sentence into full text
-    return output_string
+    return [output_string, redactedconcept]
 
 def outputfile(original_file, args_output, redactedtext): #function to output redacted text to file
     #print("REDACTED:")
@@ -275,21 +282,26 @@ def outputstats_stdout(): #function to print results to stdout.  see function ab
     total_redacted_dates = 0
     total_redacted_addresses = 0
     total_redacted_phones = 0
-    total_redacted_concepts = 0
+    total_redacted_concepts = []
+    for j in range(0,len(_args_concepts)):
+        total_redacted_concepts.append(0)
     for i in range(0,len(redacted_files)):
         total_redacted_names = total_redacted_names + redacted_names[i]
         total_redacted_genders = total_redacted_genders + redacted_genders[i]
         total_redacted_dates = total_redacted_dates + redacted_dates[i]
         total_redacted_addresses = total_redacted_addresses + redacted_addresses[i]
         total_redacted_phones = total_redacted_phones + redacted_phones[i]
-        total_redacted_concepts = total_redacted_concepts + redacted_concepts[i]
+        for j in range(0,len(_args_concepts)):
+            total_redacted_concepts[j] = total_redacted_concepts[j] + redacted_concepts[i][j]
         print("FILE: " + redacted_files[i])
         print (str(redacted_names[i]) + " names redacted.")
         print (str(redacted_genders[i]) + " gender words redacted.")
         print (str(redacted_dates[i]) + " dates redacted.")
         print (str(redacted_addresses[i]) + " addresses redacted.")
         print (str(redacted_phones[i]) + " phone numbers redacted.")
-        print (str(redacted_concepts[i]) + " concepts redacted.")
+        #print (str(redacted_concepts[i]) + " concepts redacted.")
+        for j in range(0,len(_args_concepts)):
+            print(str(redacted_concepts[i][j]) + " " + _args_concepts[j] + " concepts redacted.")
         print("==============================================")
     print("TOTALS:")
     print (str(total_redacted_names) + " names redacted.")
@@ -298,6 +310,8 @@ def outputstats_stdout(): #function to print results to stdout.  see function ab
     print (str(total_redacted_addresses) + " addresses redacted.")
     print (str(total_redacted_phones) + " phone numbers redacted.")
     print (str(total_redacted_concepts) + " concepts redacted.")
+    for j in range(0,len(_args_concepts)):
+            print(str(total_redacted_concepts[j]) + " " + _args_concepts[j] + " concepts redacted.")
     return [total_redacted_names, total_redacted_genders, total_redacted_dates, total_redacted_addresses, total_redacted_phones, total_redacted_concepts]
 
 if __name__ == '__main__': #parsing command line arguments
