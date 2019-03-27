@@ -164,9 +164,9 @@ def redact_phones(input_string,file_count): #function to redact phones
 
 def redact_concept(input_string,file_count,concept): #function to redact concepts
     print("REDACTING CONCEPT (" + concept + ")...")
-    redactedconcept = 0
-    strings_to_redact = []
-    output_string = input_string
+    redactedconcept = 0 #setting index of the concept to redact
+    strings_to_redact = [] #initializing list of words related to concept
+    output_string = input_string #initializing output string
     synonyms = wordnet.synsets(concept) #generating synset for concept
     for synonym in synonyms: #for each synonym
         strings_to_redact.append(synonym.name().split(".")[0]) #adding synonym to a list of words to redact
@@ -185,9 +185,8 @@ def redact_concept(input_string,file_count,concept): #function to redact concept
                         redacted_string = redacted_string + " " #leave the space
                     else: #if other character
                         redacted_string = redacted_string + "X" #replace with X
-                redacted_sentence = redacted_string
+                redacted_sentence = redacted_string 
                 redactedconcept = redactedconcept + 1 #iterate count of redacted concepts
-                #redacted_sentence = redacted_sentence.replace(string,'X' * len(string)) #replacing redacted words with X's
                 output_string = output_string.replace(sentence,redacted_sentence) #replacing redacted sentence into full text
     return [output_string, redactedconcept]
 
