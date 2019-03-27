@@ -14,9 +14,19 @@ redacted_addresses = [] #list to store number of redacted addresses in each file
 redacted_phones = [] #list to store number of redacted phone numbers in each file
 redacted_concepts = [] #list to store number of redacted concepts in each file
 redacted_files = [] #array of all files processed
-_args_concepts = []
+_args_concepts = [] #array to store the concepts passed through command line arguments
 
 def main(args_input, args_output, args_names, args_genders, args_dates, args_addresses, args_phones, args_stats, args_concepts):
+    #clearing initial arrays.  this is needed so that everything gets cleared between tests
+    redacted_names.clear() #list to store number of redacted names in each file
+    redacted_genders.clear() #list to store number of redacted gender words in each file
+    redacted_dates.clear() #list to store number of redacted dates in each file
+    redacted_addresses.clear() #list to store number of redacted addresses in each file
+    redacted_phones.clear() #list to store number of redacted phone numbers in each file
+    redacted_concepts.clear() #list to store number of redacted concepts in each file
+    redacted_files.clear() #array of all files processed
+    _args_concepts.clear() #array to store the concepts passed through command line arguments
+ 
     for concept in args_concepts:
         _args_concepts.append(concept)
     input_files = inputfiles(args_input) #calling function to retrieve list of file paths at command line argument locations
