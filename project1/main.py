@@ -178,9 +178,16 @@ def redact_concept(input_string,file_count,concept): #function to redact concept
         for sentence in sentences: #for each sentence
             #print("SENTENCE: " + sentence)
             redacted_sentence = sentence #initializing redacted sentence
+            redacted_string = ""
             if string in redacted_sentence: #if string to redact is in the sentence
+                for i in range(0,len(redacted_sentence)): #for each character in the string
+                    if redacted_sentence[i] == " ": #if a space
+                        redacted_string = redacted_string + " " #leave the space
+                    else: #if other character
+                        redacted_string = redacted_string + "X" #replace with X
+                redacted_sentence = redacted_string
                 redactedconcept = redactedconcept + 1 #iterate count of redacted concepts
-                redacted_sentence = redacted_sentence.replace(string,'X' * len(string)) #replacing redacted words with X's
+                #redacted_sentence = redacted_sentence.replace(string,'X' * len(string)) #replacing redacted words with X's
                 output_string = output_string.replace(sentence,redacted_sentence) #replacing redacted sentence into full text
     return [output_string, redactedconcept]
 
